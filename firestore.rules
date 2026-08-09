@@ -20,5 +20,40 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null;
     }
+
+    // Posts: publicly readable (anonymous feed). Only the owner can
+    // create, delete, or edit the caption. Reaction/comment/share
+    // counters may be bumped by any signed-in user, but only one
+    // counter field at a time, so nothing else can be tampered with.
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.authorUid == request.auth.uid;
+      allow delete: if request.auth != null
+                    && resource.data.authorUid == request.auth.uid;
+      allow update: if request.auth != null && (
+        (resource.data.authorUid == request.auth.uid &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['caption'])) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likeCount']) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['loveCount']) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['hahaCount']) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['commentCount']) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['shareCount'])
+      );
+
+      match /reactions/{uid} {
+        allow read: if true;
+        allow write: if request.auth != null && request.auth.uid == uid;
+      }
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if request.auth != null
+                      && request.resource.data.authorUid == request.auth.uid;
+        allow delete: if request.auth != null
+                      && resource.data.authorUid == request.auth.uid;
+        allow update: if false;
+      }
+    }
   }
 }

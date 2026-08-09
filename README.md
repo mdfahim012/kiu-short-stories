@@ -1,3 +1,21 @@
+# KIU Short Stories — ধাপ ১ + ধাপ ২ (Foundation + Feed System)
+
+## ধাপ ২ এ নতুন যা যোগ হয়েছে
+- News Feed (Facebook-style, ImgBB দিয়ে ছবি হোস্ট করা)
+- Create Post: Photo + Caption (Short Story Card পরের ধাপে আসবে)
+- Like / Love / Haha রিয়েকশন (একবার চাপলে যোগ হয়, আবার চাপলে সরে যায়, অন্যটা চাপলে বদলে যায়)
+- কমেন্ট করা এবং দেখা
+- Share (মোবাইলে native share sheet, ডেস্কটপে লিংক কপি) + শেয়ার কাউন্ট
+- ছবি ডাউনলোড বাটন
+- Feed Ranking Algorithm: রিসেন্সি + এনগেজমেন্ট (reaction/comment/share) মিলিয়ে স্কোর — নতুন পোস্ট শুরুতে ভিজিবিলিটি পায়, বেশি এনগেজড পোস্ট উপরে ওঠে
+- Pagination ("আরও দেখো" বাটনে লোড হয়)
+- Profile Page এ নিজের সব পোস্ট + Edit/Delete (তিন-ডট মেনু, শুধু নিজের পোস্টে)
+
+## ⚠️ Firestore Rules আবার আপডেট করা লাগবে
+posts/reactions/comments এর জন্য নতুন rules যোগ হয়েছে। Firebase Console → Firestore Database → Rules ট্যাবে গিয়ে এই প্রজেক্টের `firestore.rules` ফাইলের পুরো কন্টেন্ট কপি করে আগেরটা রিপ্লেস করে Publish করো (আগে যেভাবে করেছিলে ঠিক সেভাবে)।
+
+---
+
 # KIU Short Stories — ধাপ ১ (Foundation)
 
 এই ধাপে যা যা তৈরি হয়েছে:
