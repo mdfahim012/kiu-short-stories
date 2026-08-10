@@ -15,6 +15,7 @@ import {
   limit as fsLimit,
 } from 'firebase/firestore'
 import { db } from '../firebase/config'
+import { createNotification } from './notifications'
 
 const POSTS_COL = 'posts'
 
@@ -81,11 +82,13 @@ const REACTION_FIELD = {
 
 /**
  * Adds, switches, or removes a reaction, keeping the denormalized
- * counters on the post document in sync via a transaction.
+ * counters on the post document in sync via a transaction. Notifies
+ * the post owner when a brand-new reaction is added (not on removal).
  */
-export async function toggleReaction(postId, uid, type) {
+export async function toggleReaction(postId, uid, type, postAuthorUid, fromName) {
   const postRef = doc(db, POSTS_COL, postId)
   const reactionRef = doc(db, POSTS_COL, postId, 'reactions', uid)
+  let isNewReaction = false
 
   await runTransaction(db, async (transaction) => {
     const reactionSnap = await transaction.get(reactionRef)
@@ -100,14 +103,26 @@ export async function toggleReaction(postId, uid, type) {
 
     if (previousType) {
       transaction.update(postRef, { [REACTION_FIELD[previousType]]: increment(-1) })
+    } else {
+      isNewReaction = true
     }
 
     transaction.set(reactionRef, { type, uid })
     transaction.update(postRef, { [REACTION_FIELD[type]]: increment(1) })
   })
+
+  if (isNewReaction && postAuthorUid) {
+    await createNotification(postAuthorUid, {
+      type: 'reaction',
+      reactionType: type,
+      postId,
+      fromUid: uid,
+      fromName,
+    })
+  }
 }
 
-export async function addComment(postId, { authorUid, authorName, authorGender, text }) {
+export async function addComment(postId, { authorUid, authorName, authorGender, text }, postAuthorUid) {
   await addDoc(collection(db, POSTS_COL, postId, 'comments'), {
     authorUid,
     authorName,
@@ -116,6 +131,16 @@ export async function addComment(postId, { authorUid, authorName, authorGender, 
     createdAt: serverTimestamp(),
   })
   await updateDoc(doc(db, POSTS_COL, postId), { commentCount: increment(1) })
+
+  if (postAuthorUid) {
+    await createNotification(postAuthorUid, {
+      type: 'comment',
+      postId,
+      fromUid: authorUid,
+      fromName: authorName,
+      text: text.slice(0, 80),
+    })
+  }
 }
 
 export async function fetchComments(postId) {

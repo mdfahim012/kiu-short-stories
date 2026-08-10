@@ -71,77 +71,89 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
             exit={{ opacity: 0 }}
             onClick={handleClose}
           />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-x-4 top-1/2 -translate-y-1/2 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 max-w-md mx-auto neo-card p-6 z-50 max-h-[85vh] overflow-y-auto"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Create Post</h2>
-              <button className="neo-icon-btn w-9 h-9" onClick={handleClose}>
-                ✕
-              </button>
-            </div>
-
-            {!mode && (
-              <div className="flex flex-col gap-3">
-                <button onClick={() => setMode('photo')} className="neo-card-sm p-5 text-left">
-                  <p className="font-medium mb-1">📷 Photo + Caption</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    ফেসবুক-স্টাইল পোস্ট — একটা ছবি এবং ক্যাপশন
-                  </p>
-                </button>
-                <button
-                  onClick={() => setMode('story')}
-                  className="neo-card-sm p-5 text-left opacity-60 cursor-not-allowed"
-                >
-                  <p className="font-medium mb-1">📝 Short Story Photo Card</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    শীঘ্রই আসছে — হাইলাইট টুল সহ সিগনেচার স্টোরি কার্ড
-                  </p>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="neo-card p-6 w-full max-w-md max-h-[85vh] overflow-y-auto overscroll-contain pointer-events-auto"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Create Post</h2>
+                <button className="neo-icon-btn w-9 h-9" onClick={handleClose}>
+                  ✕
                 </button>
               </div>
-            )}
 
-            {mode === 'photo' && (
-              <div className="flex flex-col gap-4">
-                {preview ? (
-                  <div className="rounded-2xl overflow-hidden neo-inset">
-                    <img src={preview} alt="preview" className="w-full max-h-72 object-cover" />
-                  </div>
-                ) : (
-                  <label className="neo-inset flex flex-col items-center justify-center py-10 rounded-2xl cursor-pointer text-sm text-slate-500 dark:text-slate-400">
-                    📷 ছবি বেছে নিতে ক্লিক করো
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
-                  </label>
-                )}
-
-                <textarea
-                  value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
-                  placeholder="ক্যাপশন লিখো..."
-                  rows={4}
-                  className="neo-inset w-full p-3 bg-transparent outline-none text-sm rounded-2xl"
-                />
-
-                {error && <p className="text-red-500 text-xs text-center">{error}</p>}
-
-                <div className="flex gap-2">
-                  <button onClick={() => setMode(null)} className="neo-btn text-sm py-2.5">
-                    ← Back
+              {!mode && (
+                <div className="flex flex-col gap-3">
+                  <button onClick={() => setMode('photo')} className="neo-card-sm p-5 text-left">
+                    <p className="font-medium mb-1">📷 Photo + Caption</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      ফেসবুক-স্টাইল পোস্ট — একটা ছবি এবং ক্যাপশন
+                    </p>
                   </button>
                   <button
-                    onClick={handleSubmit}
-                    disabled={busy}
-                    className="flex-1 neo-btn primary-gradient text-white text-sm py-2.5 disabled:opacity-60"
+                    onClick={() => setMode('story')}
+                    className="neo-card-sm p-5 text-left opacity-60 cursor-not-allowed"
                   >
-                    {busy ? 'পোস্ট হচ্ছে...' : 'Post'}
+                    <p className="font-medium mb-1">📝 Short Story Photo Card</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      শীঘ্রই আসছে — হাইলাইট টুল সহ সিগনেচার স্টোরি কার্ড
+                    </p>
                   </button>
                 </div>
-              </div>
-            )}
-          </motion.div>
+              )}
+
+              {mode === 'photo' && (
+                <div className="flex flex-col gap-4">
+                  {preview ? (
+                    <div className="rounded-2xl overflow-hidden neo-inset relative">
+                      <img src={preview} alt="preview" className="w-full max-h-48 sm:max-h-72 object-cover" />
+                      <button
+                        onClick={() => {
+                          setFile(null)
+                          setPreview(null)
+                        }}
+                        className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center text-sm"
+                        aria-label="Remove image"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="neo-inset flex flex-col items-center justify-center py-8 rounded-2xl cursor-pointer text-sm text-slate-500 dark:text-slate-400">
+                      📷 ছবি বেছে নিতে ক্লিক করো
+                      <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                    </label>
+                  )}
+
+                  <textarea
+                    value={caption}
+                    onChange={(e) => setCaption(e.target.value)}
+                    placeholder="ক্যাপশন লিখো..."
+                    rows={3}
+                    className="neo-inset w-full p-3 bg-transparent outline-none text-sm rounded-2xl"
+                  />
+
+                  {error && <p className="text-red-500 text-xs text-center">{error}</p>}
+
+                  <div className="flex gap-2 sticky bottom-0 bg-surface-light dark:bg-surface-dark pt-1 pb-1 -mb-1">
+                    <button onClick={() => setMode(null)} className="neo-btn text-sm py-2.5">
+                      ← Back
+                    </button>
+                    <button
+                      onClick={handleSubmit}
+                      disabled={busy}
+                      className="flex-1 neo-btn primary-gradient text-white text-sm py-2.5 disabled:opacity-60"
+                    >
+                      {busy ? 'পোস্ট হচ্ছে...' : 'Post'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

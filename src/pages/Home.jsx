@@ -50,7 +50,7 @@ export default function Home() {
       ) : (
         <>
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} currentUid={profile?.uid} onChanged={handleRefresh} />
+            <PostCard key={post.id} post={post} currentUid={profile?.uid} currentName={profile?.anonymousName} onChanged={handleRefresh} />
           ))}
 
           <div className="text-center mt-2 mb-6">

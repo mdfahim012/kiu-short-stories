@@ -52,6 +52,7 @@ export default function Profile() {
             key={post.id}
             post={post}
             currentUid={profile.uid}
+            currentName={profile.anonymousName}
             showOwnerMenu
             onChanged={loadPosts}
           />

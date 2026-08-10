@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 // Firebase project config (KIU Short Stories)
@@ -16,5 +16,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 
 export const auth = getAuth(app)
+// Keep users logged in across browser/app restarts until they explicitly log out.
+setPersistence(auth, browserLocalPersistence).catch((e) => console.warn('Persistence setup failed:', e))
 export const db = getFirestore(app)
 export default app

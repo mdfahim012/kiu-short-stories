@@ -44,7 +44,7 @@ export default function CommentSection({ post, onCommentAdded }) {
         authorName: profile.anonymousName,
         authorGender: profile.gender,
         text: optimisticComment.text,
-      })
+      }, post.authorUid)
       onCommentAdded?.()
     } catch (e) {
       console.error(e)

@@ -8,7 +8,7 @@ const REACTIONS = [
   { type: 'haha', emoji: '😆', label: 'Haha' },
 ]
 
-export default function ReactionBar({ post, uid, onChange }) {
+export default function ReactionBar({ post, uid, name, onChange }) {
   const [myReaction, setMyReaction] = useState(null)
   const [busy, setBusy] = useState(false)
   const [counts, setCounts] = useState({
@@ -45,7 +45,7 @@ export default function ReactionBar({ post, uid, onChange }) {
     })
 
     try {
-      await toggleReaction(post.id, uid, type)
+      await toggleReaction(post.id, uid, type, post.authorUid, name)
     } catch (e) {
       setMyReaction(prev) // revert on failure
       setCounts({ like: post.likeCount || 0, love: post.loveCount || 0, haha: post.hahaCount || 0 })

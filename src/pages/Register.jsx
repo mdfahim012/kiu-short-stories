@@ -10,6 +10,7 @@ export default function Register() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [gender, setGender] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -60,14 +61,25 @@ export default function Register() {
             onChange={(e) => setEmail(e.target.value)}
             className="neo-inset w-full px-4 py-3 bg-transparent outline-none text-sm"
           />
-          <input
-            type="password"
-            required
-            placeholder="Password (min 6 characters)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="neo-inset w-full px-4 py-3 bg-transparent outline-none text-sm"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              required
+              placeholder="Password (min 6 characters)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="neo-inset w-full px-4 py-3 pr-11 bg-transparent outline-none text-sm"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 text-sm"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              tabIndex={-1}
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
 
           <div className="flex gap-3">
             {['male', 'female'].map((g) => (
