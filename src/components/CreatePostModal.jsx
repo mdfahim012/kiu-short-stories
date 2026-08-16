@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { uploadImageToImgbb } from '../services/upload'
 import { createPost } from '../services/posts'
+import StoryCardEditor from './StoryCardEditor'
 
 export default function CreatePostModal({ open, onClose, onPosted }) {
   const { profile } = useAuth()
@@ -95,11 +96,11 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
                   </button>
                   <button
                     onClick={() => setMode('story')}
-                    className="neo-card-sm p-5 text-left opacity-60 cursor-not-allowed"
+                    className="neo-card-sm p-5 text-left"
                   >
                     <p className="font-medium mb-1">📝 Short Story Photo Card</p>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      শীঘ্রই আসছে — হাইলাইট টুল সহ সিগনেচার স্টোরি কার্ড
+                      হাইলাইট টুল সহ সিগনেচার স্টোরি কার্ড — সর্বোচ্চ ১০০ শব্দ
                     </p>
                   </button>
                 </div>
@@ -151,6 +152,16 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
                     </button>
                   </div>
                 </div>
+              )}
+
+              {mode === 'story' && (
+                <StoryCardEditor
+                  onBack={() => setMode(null)}
+                  onPosted={() => {
+                    onPosted?.()
+                    handleClose()
+                  }}
+                />
               )}
             </motion.div>
           </div>

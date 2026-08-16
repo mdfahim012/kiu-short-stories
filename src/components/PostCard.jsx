@@ -191,7 +191,12 @@ export default function PostCard({ post, currentUid, currentName, showOwnerMenu 
       )}
 
       {post.imageUrl && (
-        <div className="rounded-2xl overflow-hidden mb-3 neo-inset">
+        <div className="rounded-2xl overflow-hidden mb-3 neo-inset relative">
+          {post.type === 'story' && post.storyNumber && (
+            <span className="absolute top-2 left-2 z-10 bg-black/50 text-white text-[11px] px-2 py-1 rounded-full">
+              গল্প নং {post.storyNumber}
+            </span>
+          )}
           <img src={post.imageUrl} alt="post" className="w-full max-h-[520px] object-cover" loading="lazy" />
         </div>
       )}

@@ -1,3 +1,22 @@
+# KIU Short Stories — ধাপ ১ + ২ + ৩ (Foundation + Feed + Short Story Card)
+
+## ধাপ ৩ এ নতুন যা যোগ হয়েছে (সিগনেচার ফিচার)
+- Short Story Photo Card: দুইটা ফিক্সড ব্যাকগ্রাউন্ডের যেকোনো একটা বেছে নেওয়া যায়
+- সর্বোচ্চ ১০০ শব্দ, লাইভ প্রিভিউ (টাইপ করার সাথে সাথে কার্ড আপডেট হয়)
+- Dynamic Typography: কম লেখা হলে বড় বোল্ড ফন্ট, বেশি লেখা হলে অটোমেটিক ছোট হয়ে যায়
+- বাংলা টেক্সট LE Ador Noirrit Bold ফন্টে
+- Highlight Tool: টেক্সট বক্সে শব্দ/লাইন সিলেক্ট করে "Highlight" চাপলে লাল হাইলাইট বসে, একাধিক হাইলাইট করা যায়, ম্যানুয়াল
+- প্রতিটা স্টোরি কার্ডে স্থায়ী, অটো-বাড়ন্ত Story Number (গল্প নং ০০১, ০০২...)
+- পোস্ট করার সময় পুরো কার্ডটা ছবি বানিয়ে (html-to-image দিয়ে) ImgBB তে আপলোড হয়
+
+## ⚠️ Firestore Rules আবার আপডেট করা লাগবে
+`storyCounter` এর জন্য নতুন rules যোগ হয়েছে। আগের মতোই Firebase Console → Firestore → Rules এ গিয়ে আপডেট করে Publish করো।
+
+## নতুন dependency
+`html-to-image` প্যাকেজ যোগ হয়েছে — GitHub এ push করলে Actions নিজে থেকেই এটা ইনস্টল করে নেবে, তোমাকে আলাদা কিছু করা লাগবে না।
+
+---
+
 # KIU Short Stories — ধাপ ১ + ধাপ ২ (Foundation + Feed System)
 
 ## ধাপ ২ এ নতুন যা যোগ হয়েছে

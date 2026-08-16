@@ -19,13 +19,21 @@ import { createNotification } from './notifications'
 
 const POSTS_COL = 'posts'
 
-/** Creates a new post (Photo + Caption type) and bumps the author's post count. */
-export async function createPost({ authorUid, authorName, authorGender, caption, imageUrl }) {
-  const postRef = await addDoc(collection(db, POSTS_COL), {
+/** Creates a new post (Photo + Caption, or Short Story Card) and bumps the author's post count. */
+export async function createPost({
+  authorUid,
+  authorName,
+  authorGender,
+  caption,
+  imageUrl,
+  type = 'photo',
+  storyNumber = null,
+}) {
+  const data = {
     authorUid,
     authorName,
     authorGender,
-    type: 'photo',
+    type,
     caption: caption || '',
     imageUrl,
     likeCount: 0,
@@ -34,7 +42,10 @@ export async function createPost({ authorUid, authorName, authorGender, caption,
     commentCount: 0,
     shareCount: 0,
     createdAt: serverTimestamp(),
-  })
+  }
+  if (storyNumber) data.storyNumber = storyNumber
+
+  const postRef = await addDoc(collection(db, POSTS_COL), data)
 
   await updateDoc(doc(db, 'users', authorUid), { postCount: increment(1) })
 
