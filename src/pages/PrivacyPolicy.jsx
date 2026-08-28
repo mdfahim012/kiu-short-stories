@@ -8,11 +8,10 @@ export default function PrivacyPolicy() {
         <div className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 space-y-3">
           <p>
             KIU Short Stories রেজিস্ট্রেশনের সময় শুধুমাত্র Email, Password এবং Gender সংগ্রহ করে।
-            কোনো প্রকৃত নাম কখনো জিজ্ঞাসা করা হয় না।
+            কোনো প্রকৃত নাম কখনো জিজ্ঞাসা করা হয় না। এবং Email, Password ইউজার ছাড়া অন্য কেউ জানবে না ।
           </p>
           <p>
-            প্রতিটি একাউন্টকে একটি স্থায়ী Anonymous Identity (Kiubian-XXXXXXX) দেওয়া হয়, যা কখনো
-            পরিবর্তনযোগ্য নয় এবং যা দিয়ে প্রকৃত পরিচয় শনাক্ত করা সম্ভব নয়।
+            প্রতিটি একাউন্টকে একটি  Anonymous Identity (Kiubian-XXXXXXX) দেওয়া হয়, যা দিয়ে প্রকৃত পরিচয় শনাক্ত করা সম্ভব নয়।
           </p>
           <p>
             পোস্ট করা ছবি এবং লেখা প্ল্যাটফর্মে সংরক্ষিত থাকে যতক্ষণ না ইউজার নিজে সেটা ডিলিট করে।
