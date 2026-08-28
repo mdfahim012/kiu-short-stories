@@ -10,7 +10,7 @@ export default function CreatePostBox({ onPosted }) {
   return (
     <>
       <div className="neo-card p-4 mb-5 flex items-center gap-3">
-        <Avatar gender={profile?.gender} seed={profile?.anonymousName} size={42} />
+        <Avatar gender={profile?.gender} seed={profile?.anonymousName} photoUrl={profile?.photoURL} size={42} />
         <button
           onClick={() => setOpen(true)}
           className="neo-inset flex-1 text-left px-4 py-3 rounded-2xl text-sm text-slate-500 dark:text-slate-400"

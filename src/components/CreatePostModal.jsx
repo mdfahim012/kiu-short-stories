@@ -48,6 +48,7 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
         authorUid: profile.uid,
         authorName: profile.anonymousName,
         authorGender: profile.gender,
+        authorPhotoURL: profile.photoURL || null,
         caption,
         imageUrl,
       })

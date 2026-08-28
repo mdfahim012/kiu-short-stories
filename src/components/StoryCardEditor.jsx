@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
 import { useAuth } from '../context/AuthContext'
-import { LOGO_URL } from '../context/ThemeContext'
 import { STORY_BACKGROUNDS } from '../utils/storyBackgrounds'
 import { computeStoryFontSize, STORY_MAX_WORDS, countWords } from '../utils/storyTypography'
 import { mergeHighlights, splitTextWithHighlights } from '../utils/highlight'
@@ -38,7 +37,9 @@ export default function StoryCardEditor({ onPosted, onBack }) {
     setSelection(null)
   }
 
-  function handleSelect() {
+  // Mobile browsers don't always fire the "select" event reliably, so we
+  // check the current selection on every interaction that could change it.
+  function captureSelection() {
     const el = textareaRef.current
     if (!el) return
     const { selectionStart, selectionEnd } = el
@@ -48,8 +49,15 @@ export default function StoryCardEditor({ onPosted, onBack }) {
   }
 
   function applyHighlight() {
-    if (!selection) return
-    setHighlights((prev) => mergeHighlights([...prev, selection]))
+    // Re-read the live selection right before applying, in case a stale
+    // state value from an earlier render slipped through.
+    const el = textareaRef.current
+    const live =
+      el && el.selectionEnd > el.selectionStart
+        ? { start: el.selectionStart, end: el.selectionEnd }
+        : selection
+    if (!live) return
+    setHighlights((prev) => mergeHighlights([...prev, live]))
     setSelection(null)
   }
 
@@ -66,8 +74,6 @@ export default function StoryCardEditor({ onPosted, onBack }) {
     setError('')
     try {
       const storyNumber = await generateStoryNumber()
-      // give the DOM a tick to render the story number before capturing
-      await new Promise((r) => setTimeout(r, 50))
 
       const dataUrl = await toPng(previewRef.current, {
         cacheBust: true,
@@ -81,6 +87,7 @@ export default function StoryCardEditor({ onPosted, onBack }) {
         authorUid: profile.uid,
         authorName: profile.anonymousName,
         authorGender: profile.gender,
+        authorPhotoURL: profile.photoURL || null,
         caption: '',
         imageUrl,
         type: 'story',
@@ -113,38 +120,20 @@ export default function StoryCardEditor({ onPosted, onBack }) {
         ))}
       </div>
 
-      {/* Live preview */}
-      <div
-        ref={previewRef}
-        className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mx-auto"
-      >
+      {/* Live preview — just your background image, full size, with only the
+          story text (and highlights) centered on top. No added branding. */}
+      <div ref={previewRef} className="relative w-full mx-auto">
         <img
           src={bg.url}
           alt="background"
           crossOrigin="anonymous"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="w-full h-auto block select-none"
+          draggable={false}
         />
 
-        {/* top bar: facebook badge + logo */}
-        <div className="absolute top-0 inset-x-0 flex items-center justify-between p-3">
-          <div className="flex items-center gap-1.5 bg-black/30 rounded-full px-2.5 py-1">
-            <span className="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">
-              f
-            </span>
-            <span className="text-white text-xs font-medium">kiu stories</span>
-          </div>
-          <img
-            src={LOGO_URL}
-            alt="logo"
-            crossOrigin="anonymous"
-            className="w-9 h-9 rounded-full border-2 border-white object-cover"
-          />
-        </div>
-
-        {/* story text */}
-        <div className="absolute inset-x-0 top-14 bottom-16 px-4 overflow-hidden flex items-start">
+        <div className="absolute inset-0 flex items-center justify-center px-8 py-10">
           <p
-            className="bangla-text text-white font-bold leading-snug break-words"
+            className="bangla-text text-white font-bold leading-snug break-words text-center"
             style={{ fontSize: `${fontSize}px` }}
           >
             {segments.map((seg, i) =>
@@ -156,16 +145,8 @@ export default function StoryCardEditor({ onPosted, onBack }) {
                 <span key={i}>{seg.text}</span>
               )
             )}
-            {!text && (
-              <span className="opacity-50">তোমার ছোট গল্পটা এখানে লিখতে শুরু করো...</span>
-            )}
+            {!text && <span className="opacity-50">তোমার ছোট গল্পটা এখানে লিখতে শুরু করো...</span>}
           </p>
-        </div>
-
-        {/* footer: author + story number */}
-        <div className="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
-          <p className="text-white text-sm font-semibold">- {profile?.anonymousName}</p>
-          <p className="text-white/70 text-[10px]">কিশোরগঞ্জ বিশ্ববিদ্যালয়</p>
         </div>
       </div>
 
@@ -175,7 +156,10 @@ export default function StoryCardEditor({ onPosted, onBack }) {
           ref={textareaRef}
           value={text}
           onChange={handleTextChange}
-          onSelect={handleSelect}
+          onSelect={captureSelection}
+          onMouseUp={captureSelection}
+          onTouchEnd={captureSelection}
+          onKeyUp={captureSelection}
           placeholder="গল্প লিখো (সর্বোচ্চ ১০০ শব্দ)..."
           rows={4}
           className="neo-inset w-full p-3 bg-transparent outline-none text-sm rounded-2xl"
@@ -184,11 +168,7 @@ export default function StoryCardEditor({ onPosted, onBack }) {
       </div>
 
       <div className="flex gap-2">
-        <button
-          onClick={applyHighlight}
-          disabled={!selection}
-          className="flex-1 neo-btn text-sm py-2 disabled:opacity-40"
-        >
+        <button onClick={applyHighlight} className="flex-1 neo-btn text-sm py-2">
           🖍️ Highlight
         </button>
         <button onClick={clearHighlights} disabled={highlights.length === 0} className="flex-1 neo-btn text-sm py-2 disabled:opacity-40">
@@ -196,7 +176,7 @@ export default function StoryCardEditor({ onPosted, onBack }) {
         </button>
       </div>
       <p className="text-[11px] text-slate-400 -mt-2">
-        টেক্সট বক্সে শব্দ/লাইন সিলেক্ট করে Highlight চাপো। টেক্সট এডিট করলে হাইলাইট রিসেট হয়ে যাবে — লেখা শেষ করে হাইলাইট করো।
+        উপরের টেক্সট বক্সে আঙুল দিয়ে চেপে ধরে শব্দ/লাইন সিলেক্ট করো, তারপর Highlight চাপো। টেক্সট এডিট করলে হাইলাইট রিসেট হয়ে যাবে — লেখা শেষ করে হাইলাইট করো।
       </p>
 
       {error && <p className="text-red-500 text-xs text-center">{error}</p>}

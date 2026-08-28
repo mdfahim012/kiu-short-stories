@@ -42,7 +42,20 @@ export default function Home() {
       <CreatePostBox onPosted={handleRefresh} />
 
       {loading ? (
-        <div className="neo-card p-10 text-center text-slate-400 text-sm">লোড হচ্ছে...</div>
+        <div className="flex flex-col gap-4">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="neo-card p-4 animate-pulse">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-11 h-11 rounded-full bg-slate-300/50 dark:bg-slate-600/50" />
+                <div className="flex-1">
+                  <div className="h-3 w-24 bg-slate-300/50 dark:bg-slate-600/50 rounded mb-2" />
+                  <div className="h-2 w-16 bg-slate-300/40 dark:bg-slate-600/40 rounded" />
+                </div>
+              </div>
+              <div className="h-48 w-full bg-slate-300/40 dark:bg-slate-600/40 rounded-2xl" />
+            </div>
+          ))}
+        </div>
       ) : posts.length === 0 ? (
         <div className="neo-card p-10 text-center text-slate-400 dark:text-slate-500 text-sm">
           📰 এখনো কোনো পোস্ট নেই — প্রথম পোস্টটা তুমিই করো!
@@ -50,7 +63,15 @@ export default function Home() {
       ) : (
         <>
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} currentUid={profile?.uid} currentName={profile?.anonymousName} onChanged={handleRefresh} />
+            <PostCard
+              key={post.id}
+              post={post}
+              currentUid={profile?.uid}
+              currentName={profile?.anonymousName}
+              currentGender={profile?.gender}
+              currentPhotoUrl={profile?.photoURL}
+              onChanged={handleRefresh}
+            />
           ))}
 
           <div className="text-center mt-2 mb-6">

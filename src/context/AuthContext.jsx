@@ -6,7 +6,7 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
 } from 'firebase/auth'
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../firebase/config'
 import { generateAnonymousId } from '../utils/anonymousId'
 
@@ -65,7 +65,22 @@ export function AuthProvider({ children }) {
     await sendPasswordResetEmail(auth, email)
   }
 
-  const value = { currentUser, profile, loading, register, login, logout, resetPassword }
+  async function updateProfilePhoto(photoURL) {
+    if (!currentUser) return
+    await updateDoc(doc(db, 'users', currentUser.uid), { photoURL })
+    setProfile((p) => (p ? { ...p, photoURL } : p))
+  }
+
+  const value = {
+    currentUser,
+    profile,
+    loading,
+    register,
+    login,
+    logout,
+    resetPassword,
+    updateProfilePhoto,
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

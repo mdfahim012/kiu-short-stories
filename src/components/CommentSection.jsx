@@ -33,6 +33,7 @@ export default function CommentSection({ post, onCommentAdded }) {
       authorUid: profile.uid,
       authorName: profile.anonymousName,
       authorGender: profile.gender,
+      authorPhotoURL: profile.photoURL || null,
       text: text.trim(),
       createdAt: null,
     }
@@ -43,6 +44,7 @@ export default function CommentSection({ post, onCommentAdded }) {
         authorUid: profile.uid,
         authorName: profile.anonymousName,
         authorGender: profile.gender,
+        authorPhotoURL: profile.photoURL || null,
         text: optimisticComment.text,
       }, post.authorUid)
       onCommentAdded?.()
@@ -64,7 +66,7 @@ export default function CommentSection({ post, onCommentAdded }) {
           )}
           {comments.map((c) => (
             <div key={c.id} className="flex items-start gap-2">
-              <Avatar gender={c.authorGender} seed={c.authorName} size={30} />
+              <Avatar gender={c.authorGender} seed={c.authorName} photoUrl={c.authorPhotoURL} size={30} />
               <div className="neo-inset rounded-2xl px-3 py-2 flex-1">
                 <p className="text-xs font-semibold">{c.authorName}</p>
                 <p className="text-sm break-words">{c.text}</p>

@@ -24,6 +24,7 @@ export async function createPost({
   authorUid,
   authorName,
   authorGender,
+  authorPhotoURL = null,
   caption,
   imageUrl,
   type = 'photo',
@@ -33,6 +34,7 @@ export async function createPost({
     authorUid,
     authorName,
     authorGender,
+    authorPhotoURL,
     type,
     caption: caption || '',
     imageUrl,
@@ -96,7 +98,7 @@ const REACTION_FIELD = {
  * counters on the post document in sync via a transaction. Notifies
  * the post owner when a brand-new reaction is added (not on removal).
  */
-export async function toggleReaction(postId, uid, type, postAuthorUid, fromName) {
+export async function toggleReaction(postId, uid, type, postAuthorUid, fromName, fromGender, fromPhotoURL) {
   const postRef = doc(db, POSTS_COL, postId)
   const reactionRef = doc(db, POSTS_COL, postId, 'reactions', uid)
   let isNewReaction = false
@@ -129,15 +131,18 @@ export async function toggleReaction(postId, uid, type, postAuthorUid, fromName)
       postId,
       fromUid: uid,
       fromName,
+      fromGender: fromGender || 'male',
+      fromPhotoURL: fromPhotoURL || null,
     })
   }
 }
 
-export async function addComment(postId, { authorUid, authorName, authorGender, text }, postAuthorUid) {
+export async function addComment(postId, { authorUid, authorName, authorGender, authorPhotoURL, text }, postAuthorUid) {
   await addDoc(collection(db, POSTS_COL, postId, 'comments'), {
     authorUid,
     authorName,
     authorGender,
+    authorPhotoURL: authorPhotoURL || null,
     text,
     createdAt: serverTimestamp(),
   })
@@ -149,6 +154,8 @@ export async function addComment(postId, { authorUid, authorName, authorGender, 
       postId,
       fromUid: authorUid,
       fromName: authorName,
+      fromGender: authorGender || 'male',
+      fromPhotoURL: authorPhotoURL || null,
       text: text.slice(0, 80),
     })
   }

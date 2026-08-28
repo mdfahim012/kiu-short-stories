@@ -36,7 +36,7 @@ function DownloadIcon() {
   )
 }
 
-export default function PostCard({ post, currentUid, currentName, showOwnerMenu = false, onChanged }) {
+export default function PostCard({ post, currentUid, currentName, currentGender, currentPhotoUrl, showOwnerMenu = false, onChanged }) {
   const [showComments, setShowComments] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -117,7 +117,7 @@ export default function PostCard({ post, currentUid, currentName, showOwnerMenu 
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          <Avatar gender={post.authorGender} seed={post.authorName} size={42} />
+          <Avatar gender={post.authorGender} seed={post.authorName} photoUrl={post.authorPhotoURL} size={42} />
           <div>
             <p className="text-sm font-semibold">{post.authorName}</p>
             <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -197,11 +197,17 @@ export default function PostCard({ post, currentUid, currentName, showOwnerMenu 
               গল্প নং {post.storyNumber}
             </span>
           )}
-          <img src={post.imageUrl} alt="post" className="w-full max-h-[520px] object-cover" loading="lazy" />
+          <img
+            src={post.imageUrl}
+            alt="post"
+            className="w-full max-h-[520px] object-cover opacity-0 transition-opacity duration-500"
+            loading="lazy"
+            onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
+          />
         </div>
       )}
 
-      <ReactionBar post={post} uid={currentUid} name={currentName} onChange={onChanged} />
+      <ReactionBar post={post} uid={currentUid} name={currentName} gender={currentGender} photoUrl={currentPhotoUrl} onChange={onChanged} />
 
       <div className="flex gap-2 mt-3">
         <motion.button

@@ -1,11 +1,34 @@
+import { useState } from 'react'
 import { getAvatarPalette } from '../utils/avatar'
 
 /**
- * Renders a permanent, auto-assigned 2D human-style avatar based on gender.
- * Male and female avatars differ in hairstyle, face shape, and color —
- * styled to look like a real illustrated person rather than a cartoon icon.
+ * Renders the user's own uploaded photo when set (photoUrl), otherwise
+ * falls back to a permanent, auto-assigned 2D illustrated avatar based
+ * on gender.
  */
-export default function Avatar({ gender = 'male', seed = '', size = 44, className = '' }) {
+export default function Avatar({ gender = 'male', seed = '', size = 44, className = '', photoUrl = null }) {
+  const [loaded, setLoaded] = useState(false)
+
+  if (photoUrl) {
+    return (
+      <div
+        className={`rounded-full overflow-hidden shadow-neo-light-sm dark:shadow-neo-dark-sm shrink-0 bg-slate-200 dark:bg-slate-700 ${className}`}
+        style={{ width: size, height: size }}
+      >
+        <img
+          src={photoUrl}
+          alt="avatar"
+          className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          onLoad={() => setLoaded(true)}
+        />
+      </div>
+    )
+  }
+
+  return <GeneratedAvatar gender={gender} seed={seed} size={size} className={className} />
+}
+
+function GeneratedAvatar({ gender, seed, size, className }) {
   const { skin, hair, shirt } = getAvatarPalette(gender, seed)
   const isFemale = gender === 'female'
   const uid = `${gender}-${seed}`.replace(/[^a-zA-Z0-9]/g, '')

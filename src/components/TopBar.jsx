@@ -69,7 +69,7 @@ export default function TopBar() {
           <div className="flex items-center gap-2">
             {currentUser && profile ? (
               <Link to="/profile" aria-label="Profile">
-                <Avatar gender={profile.gender} seed={profile.anonymousName} size={40} />
+                <Avatar gender={profile.gender} seed={profile.anonymousName} photoUrl={profile.photoURL} size={40} />
               </Link>
             ) : (
               <Link to="/login" className="neo-icon-btn" aria-label="Login">
