@@ -76,7 +76,7 @@ export default function Home() {
 
           <div className="text-center mt-2 mb-6">
             <button onClick={handleLoadMore} disabled={loadingMore} className="neo-btn text-sm px-8">
-              {loadingMore ? 'লোড হচ্ছে...' : 'আরও দেখো'}
+              {loadingMore ? 'Loading...' : 'See more'}
             </button>
           </div>
         </>
