@@ -15,7 +15,7 @@ export default function CreatePostBox({ onPosted }) {
           onClick={() => setOpen(true)}
           className="neo-inset flex-1 text-left px-4 py-3 rounded-2xl text-sm text-slate-500 dark:text-slate-400"
         >
-          তোমার মনে কী চলছে, {profile?.anonymousName}?
+          আপনার লেখাটি এখানে পোস্ট করুন, {profile?.anonymousName}?
         </button>
       </div>
       <CreatePostModal open={open} onClose={() => setOpen(false)} onPosted={onPosted} />
