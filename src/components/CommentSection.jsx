@@ -58,7 +58,7 @@ export default function CommentSection({ post, onCommentAdded }) {
   return (
     <div className="mt-3 pt-3 border-t border-slate-300/40 dark:border-slate-600/40">
       {loading ? (
-        <p className="text-xs text-slate-400 text-center py-2">লোড হচ্ছে...</p>
+        <p className="text-xs text-slate-400 text-center py-2">LOADING...</p>
       ) : (
         <div className="flex flex-col gap-3 max-h-64 overflow-y-auto mb-3">
           {comments.length === 0 && (
@@ -80,7 +80,7 @@ export default function CommentSection({ post, onCommentAdded }) {
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="একটা কমেন্ট লিখো..."
+          placeholder="Write a Comment..."
           className="neo-inset flex-1 px-3 py-2 bg-transparent outline-none text-sm rounded-xl"
         />
         <button
