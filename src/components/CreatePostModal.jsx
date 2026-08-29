@@ -37,7 +37,7 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
 
   async function handleSubmit() {
     if (!file) {
-      setError('একটা ছবি বেছে নাও')
+      setError('Select a photo')
       return
     }
     setBusy(true)
@@ -92,7 +92,7 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
                   <button onClick={() => setMode('photo')} className="neo-card-sm p-5 text-left">
                     <p className="font-medium mb-1">📷 Photo + Caption</p>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      ফেসবুক-স্টাইল পোস্ট — একটা ছবি এবং ক্যাপশন
+                    ছবি এবং ক্যাপশনসহ লম্বা লেখা
                     </p>
                   </button>
                   <button
@@ -101,7 +101,7 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
                   >
                     <p className="font-medium mb-1">📝 Short Story Photo Card</p>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      হাইলাইট টুল সহ সিগনেচার স্টোরি কার্ড — সর্বোচ্চ ১০০ শব্দ
+                      হাইলাইট টুল সহ শর্ট স্টোরি ফটো কার্ড
                     </p>
                   </button>
                 </div>
@@ -125,7 +125,7 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
                     </div>
                   ) : (
                     <label className="neo-inset flex flex-col items-center justify-center py-8 rounded-2xl cursor-pointer text-sm text-slate-500 dark:text-slate-400">
-                      📷 ছবি বেছে নিতে ক্লিক করো
+                      📸 Select photo
                       <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
                     </label>
                   )}
@@ -133,7 +133,7 @@ export default function CreatePostModal({ open, onClose, onPosted }) {
                   <textarea
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
-                    placeholder="ক্যাপশন লিখো..."
+                    placeholder="Write the Caption..."
                     rows={3}
                     className="neo-inset w-full p-3 bg-transparent outline-none text-sm rounded-2xl"
                   />
